@@ -3,7 +3,8 @@ name: Deploy Version B to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -18,6 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,7 +33,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and check
+      - name: Verify Supabase configuration
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ]; then
+            echo "ERROR: Supabase URL is missing"
+            exit 1
+          fi
+
+          if [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "ERROR: Supabase publishable key is missing"
+            exit 1
+          fi
+
+          echo "Supabase environment variables are configured."
+
+      - name: Build project
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Check deployment files
@@ -46,9 +68,12 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
