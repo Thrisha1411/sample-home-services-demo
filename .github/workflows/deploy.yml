@@ -1,5 +1,5 @@
 
-name: Deploy Version A to GitHub Pages
+name: name: Deploy Releases to GitHub Pages
 
 on:
   push:

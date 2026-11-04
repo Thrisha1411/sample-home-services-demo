@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { FormEvent, ChangeEvent } from 'react'
-import { Mail, Phone, MapPin, Send, LoaderCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, LoaderCircle, CalendarDays } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 type ContactForm = {
@@ -161,6 +161,23 @@ export default function Contact() {
           <p className="text-slate-600">
             Have a question? Send us a message using the form below.
           </p>
+        </div>
+
+        {/* Weekend Appointments Callout - Version B */}
+        <div className="max-w-7xl mx-auto mb-8 rounded-xl border border-orange-200 bg-orange-50 p-6 flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex-shrink-0 rounded-full bg-orange-100 p-3">
+            <CalendarDays className="h-7 w-7 text-orange-600" />
+          </div>
+
+          <div className="text-center sm:text-left">
+            <h3 className="text-xl font-bold text-slate-900 mb-1">
+              Weekend Appointments
+            </h3>
+            <p className="text-slate-600">
+              Looking for a convenient time? Send us your inquiry
+              and request a callback for weekend appointments.
+            </p>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 bg-white rounded-2xl shadow-sm p-8 md:p-12">
@@ -324,7 +341,7 @@ export default function Contact() {
               ) : (
                 <>
                   <Send size={18} />
-                  Contact Us
+                  Request a Callback
                 </>
               )}
             </button>
